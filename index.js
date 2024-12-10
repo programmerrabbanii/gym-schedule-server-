@@ -44,6 +44,40 @@ async function run() {
         const result= await gymScheduleCollection.deleteOne(query)
         res.send(result)
     }) 
+    app.get('/schedule/:id', async (req,res)=>{
+        const id=req.params.id;
+        const query={_id: new ObjectId(id)}
+        const result=await gymScheduleCollection.findOne(query)
+        res.send(result)
+    })
+    app.patch('/schedule/:id', async (req,res)=>{
+        try {
+            const id=req.params.id;
+            console.log(id);
+            const data=req.body;
+            const query={_id: new ObjectId(id)}
+            const update={
+                $set:{
+                    title:data?.title,
+                    day:  data?.day,
+                    time: data?.time,
+                    date: data?.data
+                } 
+     
+            }
+    
+            const result=await gymScheduleCollection.updateOne(query,update,{upsert:true}) 
+            console.log(result);
+            res.send(result)
+            
+            
+        } catch (error) {
+            console.log(error);
+            res.send({})
+            
+        }
+       
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
