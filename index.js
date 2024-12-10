@@ -1,5 +1,5 @@
 const expres=require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const cors=require('cors')
 const app=expres()
@@ -36,6 +36,12 @@ async function run() {
 
     app.get('/schedule', async (req,res)=>{
         const result= await gymScheduleCollection.find().toArray()
+        res.send(result)
+    }) 
+    app.delete('/schedule/:id', async (req,res)=>{
+        const id=req.params.id;
+        const query={_id: new ObjectId(id)}
+        const result= await gymScheduleCollection.deleteOne(query)
         res.send(result)
     }) 
     // Send a ping to confirm a successful connection
